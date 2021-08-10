@@ -1,0 +1,21 @@
+{
+  "name" : "English Dictionary",
+  "description" : "look up english word dictionary, easily noting vocabulary, searching phonetic",
+  "version" : "1.0",
+  "manifest_version" : 3,
+  "background" : {
+    "service_worker" : "background.js"
+  },
+  "host_permissions":["<all_urls>"],
+  "permissions" : ["activeTab","clipboardWrite","tabs"],
+  "action" : {
+    "default_popup": "popup.html",
+    "default_icon" : "assets/icons/dictionary.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_script.js"]
+    }
+  ]
+}
