@@ -81,6 +81,12 @@ function getDataFromAPI(word){
     }
   })
   .then(data=>{ 
+    if(data[0].phonetics.length == 0){
+      data[0].phonetics.push({
+        text: "None",
+        audio: "none"
+      });
+    }
     renderContent(data)
   })
   .catch(err=>{
