@@ -94,7 +94,7 @@ function getDataFromAPI(word){
   })
 }
 function renderContent(data){
-  copyWord = copyWord + data[0].word +" /"+ data[0].phonetic +"/ ";
+  copyWord = copyWord + data[0].word +" "+ data[0].phonetic;
   let meanings = data[0].meanings.reduce((total,value)=>{
     let partOfSpeech = partOfSpeeches.find((partOfSpeech)=>{
       let regexPartOfSpeech = new RegExp(value.partOfSpeech,"i")
@@ -114,6 +114,12 @@ function renderContent(data){
     </div>`
     return (total+div)
   },"")
+  let audioSource = data[0].phonetics[0].audio;
+  let phonetic = data[0].phonetics[0].text;
+  if(data[1] != undefined){
+    audioSource = data[1].phonetics[1].audio;
+    phonetic = data[1].phonetics[1].text;
+  }
   let contentHTML = `
       <div class="d-flex flex-row justify-content-between align-items-center">
         <h1 class="m-0">${data[0].word}</h1>
@@ -126,13 +132,13 @@ function renderContent(data){
             </svg>
           </button>
           <audio id="audioPhonetic">
-            <source src="https://${data[0].phonetics[0].audio}" type="audio/mpeg">
+            <source src="${audioSource}" type="audio/mpeg">
           </audio>
           <button class="btn" id="btnCopy">copy</button>
         </div>
       </div>
       <div style="height:2px;background-color:#333" class="m-1"></div>
-    <h3>phonetic: /${data[0].phonetic}/</h2>
+    <h3>phonetic: ${data[0].phonetic}</h2>
     ${meanings}
   `
   content.innerHTML = contentHTML;
@@ -159,7 +165,7 @@ contentSearch.addEventListener("keypress",(event)=>{
 })
 chrome.tabs.query({active: true, currentWindow: true}, tabs => {
   chrome.tabs.sendMessage(tabs[0].id,"getSelection",function(res){
-    if(res !== ""){
+    if(res != null){
       getDataFromAPI(res)
     }
   })
